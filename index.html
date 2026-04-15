@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickConvert</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root { --bg: #f4f7f6; --primary: #2563eb; --text: #1e293b; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; padding: 20px; }
+        .card { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { margin-top: 0; color: var(--primary); }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        #result { margin-top: 20px; font-size: 1.2rem; font-weight: bold; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Currency Converter</h2>
+        <input type="number" id="amount" placeholder="Enter amount" value="1">
+        <select id="fromCurrency"><option value="USD">USD - US Dollar</option><option value="INR" selected>INR - Indian Rupee</option><option value="EUR">EUR - Euro</option></select>
+        <select id="toCurrency"><option value="USD" selected>USD - US Dollar</option><option value="INR">INR - Indian Rupee</option><option value="EUR">EUR - Euro</option></select>
+        <button onclick="convert()">Convert Now</button>
+        <div id="result">---</div>
+    </div>
+
+    <script>
+        async function convert() {
+            const amt = document.getElementById('amount').value;
+            const from = document.getElementById('fromCurrency').value;
+            const to = document.getElementById('toCurrency').value;
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.innerText = "Fetching rates...";
+            
+            try {
+                // Using a free API (No API key required for this basic tier)
+                const res = await fetch(`https://open.er-api.com/v6/latest/${from}`);
+                const data = await res.json();
+                const rate = data.rates[to];
+                const final = (amt * rate).toFixed(2);
+                resultDiv.innerText = `${amt} ${from} = ${final} ${to}`;
+            } catch (err) {
+                resultDiv.innerText = "Error fetching data.";
+            }
+        }
+    </script>
+</body>
+</html>
