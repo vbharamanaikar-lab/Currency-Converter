@@ -8,17 +8,20 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #f0f4f8;
-      --card: #ffffff;
-      --border: #e2e8f0;
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --text: #1e293b;
-      --muted: #64748b;
-      --accent: #dbeafe;
-      --green: #16a34a;
-      --radius: 12px;
-      --shadow: 0 4px 24px rgba(0,0,0,0.08);
+      --bg:           #f0f4f8;
+      --card:         #ffffff;
+      --border:       #e2e8f0;
+      --primary:      #2563eb;
+      --primary-h:    #1d4ed8;
+      --text:         #1e293b;
+      --muted:        #64748b;
+      --accent:       #dbeafe;
+      --green:        #16a34a;
+      --warn-bg:      #fffbeb;
+      --warn-border:  #fcd34d;
+      --warn-text:    #92400e;
+      --radius:       12px;
+      --shadow:       0 4px 24px rgba(0,0,0,0.08);
     }
 
     body {
@@ -32,22 +35,9 @@
       padding: 32px 16px 48px;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 28px;
-    }
-
-    header h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-
-    header p {
-      color: var(--muted);
-      font-size: 0.9rem;
-      margin-top: 4px;
-    }
+    header { text-align: center; margin-bottom: 28px; }
+    header h1 { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.5px; }
+    header p  { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
 
     .card {
       background: var(--card);
@@ -59,21 +49,7 @@
       max-width: 480px;
     }
 
-    /* ── Converter inputs ── */
-    .converter {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .input-row {
-      display: flex;
-      gap: 10px;
-    }
-
-    .amount-wrap {
-      flex: 1;
-    }
+    .converter { display: flex; flex-direction: column; gap: 16px; }
 
     label {
       display: block;
@@ -97,7 +73,6 @@
       outline: none;
       transition: border-color 0.15s;
     }
-
     input[type="number"]:focus { border-color: var(--primary); }
     input[type="number"]::-webkit-inner-spin-button,
     input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
@@ -107,7 +82,7 @@
       padding: 10px 12px;
       border: 1.5px solid var(--border);
       border-radius: 8px;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: var(--text);
       background: #fff;
@@ -120,7 +95,6 @@
       padding-right: 32px;
       transition: border-color 0.15s;
     }
-
     select:focus { border-color: var(--primary); }
 
     .currency-row {
@@ -141,16 +115,10 @@
       background: #fff;
       cursor: pointer;
       font-size: 1.1rem;
-      transition: background 0.15s, border-color 0.15s, transform 0.2s;
-      margin-bottom: 0;
+      transition: background 0.15s, border-color 0.15s, transform 0.25s;
       align-self: end;
     }
-
-    .swap-btn:hover {
-      background: var(--accent);
-      border-color: var(--primary);
-      transform: rotate(180deg);
-    }
+    .swap-btn:hover { background: var(--accent); border-color: var(--primary); transform: rotate(180deg); }
 
     .convert-btn {
       width: 100%;
@@ -163,13 +131,24 @@
       font-weight: 600;
       cursor: pointer;
       transition: background 0.15s, transform 0.1s;
-      letter-spacing: 0.2px;
     }
+    .convert-btn:hover:not(:disabled) { background: var(--primary-h); }
+    .convert-btn:active:not(:disabled) { transform: scale(0.98); }
+    .convert-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
-    .convert-btn:hover { background: var(--primary-hover); }
-    .convert-btn:active { transform: scale(0.98); }
+    /* ── Notices ── */
+    .notice {
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 10px 14px;
+      border-radius: 8px;
+      display: none;
+    }
+    .notice.visible { display: block; }
+    .notice.error   { color: #dc2626; background: #fef2f2; border: 1px solid #fecaca; }
+    .notice.warn    { color: var(--warn-text); background: var(--warn-bg); border: 1px solid var(--warn-border); }
 
-    /* ── Result box ── */
+    /* ── Result ── */
     .result-box {
       background: var(--accent);
       border: 1px solid #bfdbfe;
@@ -178,7 +157,6 @@
       text-align: center;
       display: none;
     }
-
     .result-box.visible { display: block; }
 
     .result-amount {
@@ -188,20 +166,36 @@
       letter-spacing: -0.5px;
     }
 
-    .result-rate {
-      font-size: 0.82rem;
-      color: var(--muted);
-      margin-top: 4px;
+    .result-meta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 6px;
+      flex-wrap: wrap;
     }
 
-    /* ── Comparison table ── */
+    .result-rate { font-size: 0.82rem; color: var(--muted); }
+
+    .cache-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+    .cache-badge.live   { background: #dcfce7; color: #166534; }
+    .cache-badge.cached { background: #fef9c3; color: #713f12; }
+
+    /* ── Tables ── */
     .section-title {
       font-size: 0.8rem;
       font-weight: 600;
       color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin: 28px 0 12px;
+      margin: 28px 0 10px;
     }
 
     .table-wrap {
@@ -210,17 +204,13 @@
       border-radius: 10px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
 
     th {
       background: #f8fafc;
-      padding: 10px 14px;
+      padding: 9px 12px;
       text-align: left;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 600;
       color: var(--muted);
       text-transform: uppercase;
@@ -228,34 +218,41 @@
       border-bottom: 1px solid var(--border);
     }
 
-    td {
-      padding: 10px 14px;
-      border-bottom: 1px solid #f1f5f9;
-      color: var(--text);
-    }
-
+    td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; color: var(--text); }
     tr:last-child td { border-bottom: none; }
+    tr.highlight td  { background: #eff6ff; }
+    td.flag      { font-size: 1.15rem; width: 32px; padding-right: 4px; }
+    td.code      { font-weight: 700; color: var(--muted); font-size: 0.8rem; }
+    td.converted { color: var(--green); font-weight: 600; text-align: right; }
 
-    tr.highlight td { background: #eff6ff; font-weight: 600; }
+    /* ── Show-all toggle ── */
+    .show-all-btn {
+      display: block;
+      width: 100%;
+      margin-top: 10px;
+      padding: 9px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .show-all-btn:hover { background: var(--accent); color: var(--primary); border-color: #bfdbfe; }
 
-    td.flag { font-size: 1.2rem; width: 36px; }
-
-    td.converted { color: var(--green); font-weight: 600; }
-
-    /* ── Footer ── */
     .footer {
       margin-top: 10px;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--muted);
       text-align: center;
+      line-height: 1.5;
     }
-
-    .loading { opacity: 0.5; pointer-events: none; }
 
     .spinner {
       display: inline-block;
-      width: 14px;
-      height: 14px;
+      width: 14px; height: 14px;
       border: 2px solid #bfdbfe;
       border-top-color: var(--primary);
       border-radius: 50%;
@@ -263,24 +260,10 @@
       vertical-align: middle;
       margin-right: 6px;
     }
-
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .error-msg {
-      color: #dc2626;
-      font-size: 0.85rem;
-      text-align: center;
-      padding: 10px;
-      background: #fef2f2;
-      border-radius: 8px;
-      border: 1px solid #fecaca;
-      display: none;
-    }
-
-    .error-msg.visible { display: block; }
-
     @media (max-width: 400px) {
-      .card { padding: 20px 16px; }
+      .card { padding: 20px 14px; }
       .result-amount { font-size: 1.6rem; }
     }
   </style>
@@ -289,196 +272,550 @@
 
 <header>
   <h1>QuickConvert</h1>
-  <p>Live exchange rates · 10 major currencies</p>
+  <p>Live exchange rates · 160+ currencies</p>
 </header>
 
-<div class="card" id="main-card">
+<div class="card">
   <div class="converter">
 
-    <!-- Amount -->
-    <div class="amount-wrap">
+    <div>
       <label for="amount">Amount</label>
-      <input type="number" id="amount" value="1" min="0" step="any" placeholder="Enter amount" />
+      <input type="number" id="amount" value="1" min="0" step="any"
+             autocomplete="off" placeholder="Enter amount" />
     </div>
 
-    <!-- From / Swap / To -->
     <div class="currency-row">
       <div>
-        <label for="from-currency">From</label>
-        <select id="from-currency"></select>
+        <label for="from-sel">From</label>
+        <select id="from-sel"></select>
       </div>
       <button class="swap-btn" id="swap-btn" title="Swap currencies">⇄</button>
       <div>
-        <label for="to-currency">To</label>
-        <select id="to-currency"></select>
+        <label for="to-sel">To</label>
+        <select id="to-sel"></select>
       </div>
     </div>
 
-    <!-- Convert button -->
     <button class="convert-btn" id="convert-btn">Convert</button>
 
-    <!-- Error -->
-    <div class="error-msg" id="error-msg"></div>
+    <div class="notice error" id="error-notice"></div>
+    <div class="notice warn"  id="warn-notice"></div>
 
-    <!-- Result -->
     <div class="result-box" id="result-box">
       <div class="result-amount" id="result-amount"></div>
-      <div class="result-rate" id="result-rate"></div>
+      <div class="result-meta">
+        <span class="result-rate" id="result-rate"></span>
+        <span class="cache-badge" id="cache-badge"></span>
+      </div>
     </div>
   </div>
 
-  <!-- Comparison table -->
   <div id="table-section" style="display:none">
-    <div class="section-title" id="table-title">All currencies</div>
+    <div class="section-title" id="table-title"></div>
+
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Currency</th>
-            <th>Code</th>
-            <th>Converted</th>
-          </tr>
-        </thead>
-        <tbody id="compare-tbody"></tbody>
+        <thead><tr><th></th><th>Currency</th><th>Code</th><th style="text-align:right">Converted</th></tr></thead>
+        <tbody id="major-tbody"></tbody>
       </table>
     </div>
+
+    <button class="show-all-btn" id="show-all-btn"></button>
+
+    <div id="all-section" style="display:none">
+      <div class="table-wrap" style="margin-top:10px">
+        <table>
+          <thead><tr><th></th><th>Currency</th><th>Code</th><th style="text-align:right">Converted</th></tr></thead>
+          <tbody id="all-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
     <div class="footer" id="rate-footer"></div>
   </div>
 </div>
 
 <script>
-  const CURRENCIES = [
-    { code: "USD", name: "US Dollar",         flag: "🇺🇸" },
-    { code: "EUR", name: "Euro",               flag: "🇪🇺" },
-    { code: "GBP", name: "British Pound",      flag: "🇬🇧" },
-    { code: "JPY", name: "Japanese Yen",       flag: "🇯🇵" },
-    { code: "INR", name: "Indian Rupee",        flag: "🇮🇳" },
-    { code: "CNY", name: "Chinese Yuan",       flag: "🇨🇳" },
-    { code: "CAD", name: "Canadian Dollar",    flag: "🇨🇦" },
-    { code: "AUD", name: "Australian Dollar",  flag: "🇦🇺" },
-    { code: "CHF", name: "Swiss Franc",        flag: "🇨🇭" },
-    { code: "SGD", name: "Singapore Dollar",   flag: "🇸🇬" },
-  ];
+'use strict';
 
-  const API = (base) => `https://open.er-api.com/v6/latest/${base}`;
+/* ── Config ─────────────────────────────────────────── */
+const CACHE_TTL_MS   = 10 * 60 * 1000;   // 10 min fresh window
+const FETCH_TIMEOUT  = 10_000;            // 10 s per attempt
+const MAX_RETRIES    = 3;
+const RETRY_BASE_MS  = 800;
+const MAX_AMOUNT     = 1_000_000_000_000;
+const CACHE_PREFIX   = "qc_v1_";
+const API_URL        = code => `https://open.er-api.com/v6/latest/${code}`;
 
-  // Populate selects
-  const fromSel = document.getElementById("from-currency");
-  const toSel   = document.getElementById("to-currency");
+/* ── Zero-decimal currencies ─────────────────────────
+   These currencies have no fractional units in normal use. */
+const ZERO_DEC = new Set([
+  "BIF","CLP","DJF","GNF","IDR","ISK","JPY","KMF",
+  "KRW","MGA","PYG","RWF","TZS","UGX","VND","VUV",
+  "XAF","XOF","XPF","HUF","KWD" // KWD uses 3 decimals but we'll override below
+]);
+/* High-precision currencies (3 decimal places) */
+const THREE_DEC = new Set(["KWD","BHD","OMR","JOD","TND"]);
 
-  CURRENCIES.forEach(c => {
-    const opt1 = new Option(`${c.flag}  ${c.code} — ${c.name}`, c.code);
-    const opt2 = new Option(`${c.flag}  ${c.code} — ${c.name}`, c.code);
-    fromSel.add(opt1);
-    toSel.add(opt2);
+/* ── Currency catalogue ───────────────────────────── */
+const MAJOR_CODES = ["USD","EUR","GBP","JPY","INR","CNY","CAD","AUD","CHF","SGD"];
+
+/* Full ISO 4217 list supported by open.er-api.com */
+const ALL_CURRENCIES = [
+  {code:"AED",name:"UAE Dirham",                  flag:"🇦🇪"},
+  {code:"AFN",name:"Afghan Afghani",               flag:"🇦🇫"},
+  {code:"ALL",name:"Albanian Lek",                 flag:"🇦🇱"},
+  {code:"AMD",name:"Armenian Dram",                flag:"🇦🇲"},
+  {code:"ANG",name:"Neth. Antillean Guilder",      flag:"🇨🇼"},
+  {code:"AOA",name:"Angolan Kwanza",               flag:"🇦🇴"},
+  {code:"ARS",name:"Argentine Peso",               flag:"🇦🇷"},
+  {code:"AUD",name:"Australian Dollar",            flag:"🇦🇺"},
+  {code:"AWG",name:"Aruban Florin",                flag:"🇦🇼"},
+  {code:"AZN",name:"Azerbaijani Manat",            flag:"🇦🇿"},
+  {code:"BAM",name:"Bosnian Mark",                 flag:"🇧🇦"},
+  {code:"BBD",name:"Barbadian Dollar",             flag:"🇧🇧"},
+  {code:"BDT",name:"Bangladeshi Taka",             flag:"🇧🇩"},
+  {code:"BGN",name:"Bulgarian Lev",                flag:"🇧🇬"},
+  {code:"BHD",name:"Bahraini Dinar",               flag:"🇧🇭"},
+  {code:"BIF",name:"Burundian Franc",              flag:"🇧🇮"},
+  {code:"BMD",name:"Bermudan Dollar",              flag:"🇧🇲"},
+  {code:"BND",name:"Brunei Dollar",                flag:"🇧🇳"},
+  {code:"BOB",name:"Bolivian Boliviano",           flag:"🇧🇴"},
+  {code:"BRL",name:"Brazilian Real",               flag:"🇧🇷"},
+  {code:"BSD",name:"Bahamian Dollar",              flag:"🇧🇸"},
+  {code:"BTN",name:"Bhutanese Ngultrum",           flag:"🇧🇹"},
+  {code:"BWP",name:"Botswanan Pula",               flag:"🇧🇼"},
+  {code:"BYN",name:"Belarusian Ruble",             flag:"🇧🇾"},
+  {code:"BZD",name:"Belize Dollar",                flag:"🇧🇿"},
+  {code:"CAD",name:"Canadian Dollar",              flag:"🇨🇦"},
+  {code:"CDF",name:"Congolese Franc",              flag:"🇨🇩"},
+  {code:"CHF",name:"Swiss Franc",                  flag:"🇨🇭"},
+  {code:"CLP",name:"Chilean Peso",                 flag:"🇨🇱"},
+  {code:"CNY",name:"Chinese Yuan",                 flag:"🇨🇳"},
+  {code:"COP",name:"Colombian Peso",               flag:"🇨🇴"},
+  {code:"CRC",name:"Costa Rican Colón",            flag:"🇨🇷"},
+  {code:"CUP",name:"Cuban Peso",                   flag:"🇨🇺"},
+  {code:"CVE",name:"Cape Verdean Escudo",          flag:"🇨🇻"},
+  {code:"CZK",name:"Czech Koruna",                 flag:"🇨🇿"},
+  {code:"DJF",name:"Djiboutian Franc",             flag:"🇩🇯"},
+  {code:"DKK",name:"Danish Krone",                 flag:"🇩🇰"},
+  {code:"DOP",name:"Dominican Peso",               flag:"🇩🇴"},
+  {code:"DZD",name:"Algerian Dinar",               flag:"🇩🇿"},
+  {code:"EGP",name:"Egyptian Pound",               flag:"🇪🇬"},
+  {code:"ERN",name:"Eritrean Nakfa",               flag:"🇪🇷"},
+  {code:"ETB",name:"Ethiopian Birr",               flag:"🇪🇹"},
+  {code:"EUR",name:"Euro",                         flag:"🇪🇺"},
+  {code:"FJD",name:"Fijian Dollar",                flag:"🇫🇯"},
+  {code:"FKP",name:"Falkland Islands Pound",       flag:"🇫🇰"},
+  {code:"GBP",name:"British Pound",                flag:"🇬🇧"},
+  {code:"GEL",name:"Georgian Lari",                flag:"🇬🇪"},
+  {code:"GHS",name:"Ghanaian Cedi",                flag:"🇬🇭"},
+  {code:"GIP",name:"Gibraltar Pound",              flag:"🇬🇮"},
+  {code:"GMD",name:"Gambian Dalasi",               flag:"🇬🇲"},
+  {code:"GNF",name:"Guinean Franc",                flag:"🇬🇳"},
+  {code:"GTQ",name:"Guatemalan Quetzal",           flag:"🇬🇹"},
+  {code:"GYD",name:"Guyanaese Dollar",             flag:"🇬🇾"},
+  {code:"HKD",name:"Hong Kong Dollar",             flag:"🇭🇰"},
+  {code:"HNL",name:"Honduran Lempira",             flag:"🇭🇳"},
+  {code:"HTG",name:"Haitian Gourde",               flag:"🇭🇹"},
+  {code:"HUF",name:"Hungarian Forint",             flag:"🇭🇺"},
+  {code:"IDR",name:"Indonesian Rupiah",            flag:"🇮🇩"},
+  {code:"ILS",name:"Israeli New Shekel",           flag:"🇮🇱"},
+  {code:"INR",name:"Indian Rupee",                 flag:"🇮🇳"},
+  {code:"IQD",name:"Iraqi Dinar",                  flag:"🇮🇶"},
+  {code:"IRR",name:"Iranian Rial",                 flag:"🇮🇷"},
+  {code:"ISK",name:"Icelandic Króna",              flag:"🇮🇸"},
+  {code:"JMD",name:"Jamaican Dollar",              flag:"🇯🇲"},
+  {code:"JOD",name:"Jordanian Dinar",              flag:"🇯🇴"},
+  {code:"JPY",name:"Japanese Yen",                 flag:"🇯🇵"},
+  {code:"KES",name:"Kenyan Shilling",              flag:"🇰🇪"},
+  {code:"KGS",name:"Kyrgystani Som",               flag:"🇰🇬"},
+  {code:"KHR",name:"Cambodian Riel",               flag:"🇰🇭"},
+  {code:"KMF",name:"Comorian Franc",               flag:"🇰🇲"},
+  {code:"KRW",name:"South Korean Won",             flag:"🇰🇷"},
+  {code:"KWD",name:"Kuwaiti Dinar",                flag:"🇰🇼"},
+  {code:"KYD",name:"Cayman Islands Dollar",        flag:"🇰🇾"},
+  {code:"KZT",name:"Kazakhstani Tenge",            flag:"🇰🇿"},
+  {code:"LAK",name:"Laotian Kip",                  flag:"🇱🇦"},
+  {code:"LBP",name:"Lebanese Pound",               flag:"🇱🇧"},
+  {code:"LKR",name:"Sri Lankan Rupee",             flag:"🇱🇰"},
+  {code:"LRD",name:"Liberian Dollar",              flag:"🇱🇷"},
+  {code:"LSL",name:"Lesotho Loti",                 flag:"🇱🇸"},
+  {code:"LYD",name:"Libyan Dinar",                 flag:"🇱🇾"},
+  {code:"MAD",name:"Moroccan Dirham",              flag:"🇲🇦"},
+  {code:"MDL",name:"Moldovan Leu",                 flag:"🇲🇩"},
+  {code:"MGA",name:"Malagasy Ariary",              flag:"🇲🇬"},
+  {code:"MKD",name:"Macedonian Denar",             flag:"🇲🇰"},
+  {code:"MMK",name:"Myanmar Kyat",                 flag:"🇲🇲"},
+  {code:"MNT",name:"Mongolian Tugrik",             flag:"🇲🇳"},
+  {code:"MOP",name:"Macanese Pataca",              flag:"🇲🇴"},
+  {code:"MRU",name:"Mauritanian Ouguiya",          flag:"🇲🇷"},
+  {code:"MUR",name:"Mauritian Rupee",              flag:"🇲🇺"},
+  {code:"MVR",name:"Maldivian Rufiyaa",            flag:"🇲🇻"},
+  {code:"MWK",name:"Malawian Kwacha",              flag:"🇲🇼"},
+  {code:"MXN",name:"Mexican Peso",                 flag:"🇲🇽"},
+  {code:"MYR",name:"Malaysian Ringgit",            flag:"🇲🇾"},
+  {code:"MZN",name:"Mozambican Metical",           flag:"🇲🇿"},
+  {code:"NAD",name:"Namibian Dollar",              flag:"🇳🇦"},
+  {code:"NGN",name:"Nigerian Naira",               flag:"🇳🇬"},
+  {code:"NIO",name:"Nicaraguan Córdoba",           flag:"🇳🇮"},
+  {code:"NOK",name:"Norwegian Krone",              flag:"🇳🇴"},
+  {code:"NPR",name:"Nepalese Rupee",               flag:"🇳🇵"},
+  {code:"NZD",name:"New Zealand Dollar",           flag:"🇳🇿"},
+  {code:"OMR",name:"Omani Rial",                   flag:"🇴🇲"},
+  {code:"PAB",name:"Panamanian Balboa",            flag:"🇵🇦"},
+  {code:"PEN",name:"Peruvian Sol",                 flag:"🇵🇪"},
+  {code:"PGK",name:"Papua New Guinean Kina",       flag:"🇵🇬"},
+  {code:"PHP",name:"Philippine Peso",              flag:"🇵🇭"},
+  {code:"PKR",name:"Pakistani Rupee",              flag:"🇵🇰"},
+  {code:"PLN",name:"Polish Złoty",                 flag:"🇵🇱"},
+  {code:"PYG",name:"Paraguayan Guarani",           flag:"🇵🇾"},
+  {code:"QAR",name:"Qatari Rial",                  flag:"🇶🇦"},
+  {code:"RON",name:"Romanian Leu",                 flag:"🇷🇴"},
+  {code:"RSD",name:"Serbian Dinar",                flag:"🇷🇸"},
+  {code:"RUB",name:"Russian Ruble",                flag:"🇷🇺"},
+  {code:"RWF",name:"Rwandan Franc",                flag:"🇷🇼"},
+  {code:"SAR",name:"Saudi Riyal",                  flag:"🇸🇦"},
+  {code:"SBD",name:"Solomon Islands Dollar",       flag:"🇸🇧"},
+  {code:"SCR",name:"Seychellois Rupee",            flag:"🇸🇨"},
+  {code:"SDG",name:"Sudanese Pound",               flag:"🇸🇩"},
+  {code:"SEK",name:"Swedish Krona",                flag:"🇸🇪"},
+  {code:"SGD",name:"Singapore Dollar",             flag:"🇸🇬"},
+  {code:"SHP",name:"Saint Helena Pound",           flag:"🇸🇭"},
+  {code:"SOS",name:"Somali Shilling",              flag:"🇸🇴"},
+  {code:"SRD",name:"Surinamese Dollar",            flag:"🇸🇷"},
+  {code:"STN",name:"São Tomé Dobra",               flag:"🇸🇹"},
+  {code:"SYP",name:"Syrian Pound",                 flag:"🇸🇾"},
+  {code:"SZL",name:"Swazi Lilangeni",              flag:"🇸🇿"},
+  {code:"THB",name:"Thai Baht",                    flag:"🇹🇭"},
+  {code:"TJS",name:"Tajikistani Somoni",           flag:"🇹🇯"},
+  {code:"TMT",name:"Turkmenistani Manat",          flag:"🇹🇲"},
+  {code:"TND",name:"Tunisian Dinar",               flag:"🇹🇳"},
+  {code:"TOP",name:"Tongan Paʻanga",               flag:"🇹🇴"},
+  {code:"TRY",name:"Turkish Lira",                 flag:"🇹🇷"},
+  {code:"TTD",name:"Trinidad Dollar",              flag:"🇹🇹"},
+  {code:"TWD",name:"Taiwan Dollar",                flag:"🇹🇼"},
+  {code:"TZS",name:"Tanzanian Shilling",           flag:"🇹🇿"},
+  {code:"UAH",name:"Ukrainian Hryvnia",            flag:"🇺🇦"},
+  {code:"UGX",name:"Ugandan Shilling",             flag:"🇺🇬"},
+  {code:"USD",name:"US Dollar",                    flag:"🇺🇸"},
+  {code:"UYU",name:"Uruguayan Peso",               flag:"🇺🇾"},
+  {code:"UZS",name:"Uzbekistani Som",              flag:"🇺🇿"},
+  {code:"VES",name:"Venezuelan Bolívar",           flag:"🇻🇪"},
+  {code:"VND",name:"Vietnamese Dong",              flag:"🇻🇳"},
+  {code:"VUV",name:"Vanuatu Vatu",                 flag:"🇻🇺"},
+  {code:"WST",name:"Samoan Tala",                  flag:"🇼🇸"},
+  {code:"XAF",name:"CFA Franc BEAC",               flag:"🌍"},
+  {code:"XCD",name:"East Caribbean Dollar",        flag:"🌎"},
+  {code:"XOF",name:"CFA Franc BCEAO",              flag:"🌍"},
+  {code:"XPF",name:"CFP Franc",                    flag:"🌏"},
+  {code:"YER",name:"Yemeni Rial",                  flag:"🇾🇪"},
+  {code:"ZAR",name:"South African Rand",           flag:"🇿🇦"},
+  {code:"ZMW",name:"Zambian Kwacha",               flag:"🇿🇲"},
+  {code:"ZWL",name:"Zimbabwean Dollar",            flag:"🇿🇼"},
+].sort((a, b) => a.code.localeCompare(b.code));
+
+const CURRENCY_MAP = Object.fromEntries(ALL_CURRENCIES.map(c => [c.code, c]));
+const MAJOR        = MAJOR_CODES.map(c => CURRENCY_MAP[c]);
+const OTHERS       = ALL_CURRENCIES.filter(c => !MAJOR_CODES.includes(c.code));
+
+/* ── Decimal precision ────────────────────────────── */
+function decimalPlaces(code) {
+  if (THREE_DEC.has(code)) return 3;
+  if (ZERO_DEC.has(code))  return 0;
+  return 2;
+}
+
+function fmt(value, code) {
+  const d = decimalPlaces(code);
+  return value.toLocaleString(undefined, { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+
+/* ── localStorage cache ───────────────────────────── */
+function readCache(base) {
+  try {
+    const raw = localStorage.getItem(CACHE_PREFIX + base);
+    if (!raw) return null;
+    const { rates, ts, updatedAt } = JSON.parse(raw);
+    if (!rates || typeof rates !== "object") return null;
+    return { rates, ageMs: Date.now() - ts, updatedAt };
+  } catch { return null; }
+}
+
+function getFreshCache(base) {
+  const c = readCache(base);
+  return (c && c.ageMs <= CACHE_TTL_MS) ? c : null;
+}
+
+function writeCache(base, rates, updatedAt) {
+  try {
+    localStorage.setItem(CACHE_PREFIX + base,
+      JSON.stringify({ rates, updatedAt, ts: Date.now() }));
+  } catch { /* storage full or unavailable — degrade silently */ }
+}
+
+/* ── Network fetch with timeout + retry ──────────── */
+function fetchWithTimeout(url, ms) {
+  const ctrl = new AbortController();
+  const tid  = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(tid));
+}
+
+async function fetchRates(base) {
+  let lastErr;
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    if (attempt > 0) {
+      await new Promise(r => setTimeout(r, RETRY_BASE_MS * 2 ** (attempt - 1)));
+    }
+    try {
+      const res = await fetchWithTimeout(API_URL(base), FETCH_TIMEOUT);
+      if (res.status === 429) {
+        const e = new Error("Rate limited"); e.code = "RATE_LIMIT"; throw e;
+      }
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (data.result !== "success" || typeof data.rates !== "object") {
+        throw new Error("Unexpected response structure from API");
+      }
+      return data;
+    } catch (e) {
+      lastErr = e;
+      // Don't retry on rate-limit or abort — escalate immediately
+      if (e.code === "RATE_LIMIT" || e.name === "AbortError") break;
+    }
+  }
+  throw lastErr;
+}
+
+/* ── Input validation ─────────────────────────────── */
+function validateAmount(raw) {
+  const n = parseFloat(raw);
+  if (!isFinite(n) || n < 0)  return { ok: false, msg: "Enter a valid positive number." };
+  if (n === 0)                 return { ok: true,  value: 0 };
+  if (n > MAX_AMOUNT)          return { ok: false, msg: `Maximum is ${MAX_AMOUNT.toLocaleString()}.` };
+  return { ok: true, value: n };
+}
+
+/* ── DOM refs ─────────────────────────────────────── */
+const amountInput   = document.getElementById("amount");
+const fromSel       = document.getElementById("from-sel");
+const toSel         = document.getElementById("to-sel");
+const convertBtn    = document.getElementById("convert-btn");
+const errorNotice   = document.getElementById("error-notice");
+const warnNotice    = document.getElementById("warn-notice");
+const resultBox     = document.getElementById("result-box");
+const resultAmt     = document.getElementById("result-amount");
+const resultRate    = document.getElementById("result-rate");
+const cacheBadge    = document.getElementById("cache-badge");
+const tableSection  = document.getElementById("table-section");
+const tableTitle    = document.getElementById("table-title");
+const majorTbody    = document.getElementById("major-tbody");
+const allTbody      = document.getElementById("all-tbody");
+const rateFooter    = document.getElementById("rate-footer");
+const showAllBtn    = document.getElementById("show-all-btn");
+const allSection    = document.getElementById("all-section");
+
+/* ── Populate selects ─────────────────────────────── */
+(function populateSelects() {
+  function addOptGroup(sel, label, list) {
+    const grp = document.createElement("optgroup");
+    grp.label = label;
+    list.forEach(c => grp.appendChild(new Option(`${c.flag}  ${c.code} — ${c.name}`, c.code)));
+    sel.appendChild(grp);
+  }
+  [fromSel, toSel].forEach(sel => {
+    addOptGroup(sel, "★  Major Currencies", MAJOR);
+    addOptGroup(sel, "All Currencies  (A – Z)", OTHERS);
   });
-
   fromSel.value = "USD";
   toSel.value   = "INR";
+})();
 
-  // Swap
-  document.getElementById("swap-btn").addEventListener("click", () => {
-    [fromSel.value, toSel.value] = [toSel.value, fromSel.value];
-  });
+/* ── Swap ─────────────────────────────────────────── */
+document.getElementById("swap-btn").addEventListener("click", () => {
+  [fromSel.value, toSel.value] = [toSel.value, fromSel.value];
+});
 
-  // Convert
-  document.getElementById("convert-btn").addEventListener("click", doConvert);
-  document.getElementById("amount").addEventListener("keydown", e => {
-    if (e.key === "Enter") doConvert();
-  });
+/* ── Expand / collapse all-currencies table ───────── */
+let allExpanded = false;
+showAllBtn.addEventListener("click", () => {
+  allExpanded = !allExpanded;
+  allSection.style.display = allExpanded ? "block" : "none";
+  updateShowAllLabel();
+});
+function updateShowAllLabel() {
+  showAllBtn.textContent = allExpanded
+    ? `▲ Show only major currencies`
+    : `▼ Show all ${OTHERS.length} other currencies`;
+}
 
-  async function doConvert() {
-    const amount = parseFloat(document.getElementById("amount").value);
-    const from   = fromSel.value;
-    const to     = toSel.value;
+/* ── Notice helpers ───────────────────────────────── */
+function showError(msg) {
+  errorNotice.textContent = msg;
+  errorNotice.classList.add("visible");
+}
+function showWarn(msg) {
+  warnNotice.textContent = msg;
+  warnNotice.classList.add("visible");
+}
+function clearNotices() {
+  errorNotice.classList.remove("visible");
+  warnNotice.classList.remove("visible");
+}
 
-    const errorEl  = document.getElementById("error-msg");
-    const resultEl = document.getElementById("result-box");
-    const btn      = document.getElementById("convert-btn");
+/* ── Main conversion flow ─────────────────────────── */
+convertBtn.addEventListener("click", doConvert);
+amountInput.addEventListener("keydown", e => { if (e.key === "Enter") doConvert(); });
 
-    errorEl.classList.remove("visible");
-    resultEl.classList.remove("visible");
-    document.getElementById("table-section").style.display = "none";
+async function doConvert() {
+  const validation = validateAmount(amountInput.value);
+  if (!validation.ok) { clearNotices(); showError(validation.msg); return; }
 
-    if (isNaN(amount) || amount < 0) {
-      showError("Please enter a valid positive amount.");
+  const amount = validation.value;
+  const from   = fromSel.value;
+  const to     = toSel.value;
+
+  clearNotices();
+  resultBox.classList.remove("visible");
+  tableSection.style.display = "none";
+
+  convertBtn.innerHTML = '<span class="spinner"></span>Fetching rates…';
+  convertBtn.disabled  = true;
+
+  let rates, ageMs, updatedAt, fromCache = false;
+
+  try {
+    const fresh = getFreshCache(from);
+
+    if (fresh) {
+      /* ① Serve from in-TTL cache — no network hit */
+      ({ rates, ageMs, updatedAt } = fresh);
+      fromCache = true;
+
+    } else if (!navigator.onLine) {
+      /* ② Offline — fall back to stale cache if available */
+      const stale = readCache(from);
+      if (stale) {
+        ({ rates, ageMs, updatedAt } = stale);
+        fromCache = true;
+        showWarn("You're offline. Showing cached rates — may be outdated.");
+      } else {
+        showError("You're offline and no cached data is available for this currency.");
+        return;
+      }
+
+    } else {
+      /* ③ Fetch live rates */
+      try {
+        const data = await fetchRates(from);
+        rates     = data.rates;
+        updatedAt = data.time_last_update_utc;
+        ageMs     = 0;
+        writeCache(from, rates, updatedAt);
+      } catch (fetchErr) {
+        /* ④ Fetch failed — fall back to stale cache if any */
+        const stale = readCache(from);
+        if (stale) {
+          ({ rates, ageMs, updatedAt } = stale);
+          fromCache = true;
+          const mins = Math.round(stale.ageMs / 60_000);
+          showWarn(`Live rates unavailable. Showing cached rates from ${mins} min ago.`);
+        } else {
+          throw fetchErr;
+        }
+      }
+    }
+
+    if (!rates[to]) {
+      showError(`Conversion to ${to} is not supported by the data source.`);
       return;
     }
 
-    btn.innerHTML = '<span class="spinner"></span>Fetching rates…';
-    btn.disabled = true;
+    renderResult(amount, from, to, rates, ageMs, fromCache);
+    renderTable(amount, from, rates, updatedAt, ageMs, fromCache);
 
-    try {
-      const res  = await fetch(API(from));
-      if (!res.ok) throw new Error("API error");
-      const data = await res.json();
+  } catch (e) {
+    renderFetchError(e);
+  } finally {
+    convertBtn.textContent = "Convert";
+    convertBtn.disabled    = false;
+  }
+}
 
-      const rates     = data.rates;
-      const toRate    = rates[to];
-      const converted = (amount * toRate).toFixed(4);
+function renderFetchError(e) {
+  if (e.code === "RATE_LIMIT") {
+    showError("Rate limit reached. Please wait a moment and try again.");
+  } else if (e.name === "AbortError") {
+    showError("Request timed out. Check your connection and try again.");
+  } else {
+    showError("Could not fetch rates. Check your connection and try again.");
+  }
+}
 
-      const fromCurr = CURRENCIES.find(c => c.code === from);
-      const toCurr   = CURRENCIES.find(c => c.code === to);
+/* ── Result panel ─────────────────────────────────── */
+function renderResult(amount, from, to, rates, ageMs, fromCache) {
+  const toRate    = rates[to];
+  const toCurr    = CURRENCY_MAP[to];
+  const fromCurr  = CURRENCY_MAP[from];
 
-      // Result
-      document.getElementById("result-amount").textContent =
-        `${toCurr.flag} ${formatNumber(converted)} ${to}`;
-      document.getElementById("result-rate").textContent =
-        `1 ${from} = ${formatNumber(toRate.toFixed(6))} ${to}`;
-      resultEl.classList.add("visible");
+  resultAmt.textContent  = `${toCurr.flag}  ${fmt(amount * toRate, to)} ${to}`;
+  resultRate.textContent = `1 ${from} = ${fmt(toRate, to)} ${to}  ·  1 ${to} = ${fmt(1 / toRate, from)} ${from}`;
 
-      // Table
-      buildTable(amount, from, rates, data.time_last_update_utc);
-
-    } catch (e) {
-      showError("Could not fetch rates. Check your connection and try again.");
-    } finally {
-      btn.textContent = "Convert";
-      btn.disabled = false;
-    }
+  if (fromCache) {
+    const mins = Math.round(ageMs / 60_000);
+    cacheBadge.textContent = mins < 1 ? "CACHED" : `CACHED ${mins}m ago`;
+    cacheBadge.className   = "cache-badge cached";
+  } else {
+    cacheBadge.textContent = "LIVE";
+    cacheBadge.className   = "cache-badge live";
   }
 
-  function buildTable(amount, from, rates, updatedAt) {
-    const tbody = document.getElementById("compare-tbody");
-    tbody.innerHTML = "";
+  resultBox.classList.add("visible");
+}
 
-    const fromCurr = CURRENCIES.find(c => c.code === from);
+/* ── Comparison tables ────────────────────────────── */
+function buildRow(c, amount, rates, isFrom) {
+  const rate = rates[c.code];
+  if (rate == null) return null;
+  const tr = document.createElement("tr");
+  if (isFrom) tr.classList.add("highlight");
+  tr.innerHTML =
+    `<td class="flag">${c.flag}</td>` +
+    `<td>${c.name}</td>` +
+    `<td class="code">${c.code}</td>` +
+    `<td class="converted">${fmt(amount * rate, c.code)} ${c.code}</td>`;
+  return tr;
+}
 
-    CURRENCIES.forEach(c => {
-      const rate      = rates[c.code];
-      const converted = amount * rate;
-      const tr        = document.createElement("tr");
-      if (c.code === from) tr.classList.add("highlight");
+function renderTable(amount, from, rates, updatedAt, ageMs, fromCache) {
+  majorTbody.innerHTML = "";
+  allTbody.innerHTML   = "";
 
-      tr.innerHTML = `
-        <td class="flag">${c.flag}</td>
-        <td>${c.name}</td>
-        <td>${c.code}</td>
-        <td class="converted">${formatNumber(converted.toFixed(c.code === "JPY" ? 2 : 4))} ${c.code}</td>
-      `;
-      tbody.appendChild(tr);
-    });
+  MAJOR.forEach(c => {
+    const tr = buildRow(c, amount, rates, c.code === from);
+    if (tr) majorTbody.appendChild(tr);
+  });
+  OTHERS.forEach(c => {
+    const tr = buildRow(c, amount, rates, c.code === from);
+    if (tr) allTbody.appendChild(tr);
+  });
 
-    document.getElementById("table-title").textContent =
-      `${formatNumber(amount)} ${from} compared to all currencies`;
-    document.getElementById("rate-footer").textContent =
-      `Rates updated: ${updatedAt ? new Date(updatedAt).toLocaleString() : "recently"} · Source: open.er-api.com`;
-    document.getElementById("table-section").style.display = "block";
-  }
+  tableTitle.textContent = `${fmt(amount, from)} ${from} in all currencies`;
+  updateShowAllLabel();
 
-  function showError(msg) {
-    const el = document.getElementById("error-msg");
-    el.textContent = msg;
-    el.classList.add("visible");
-  }
+  const sourceLabel = fromCache
+    ? `Cached ${Math.round(ageMs / 60_000)} min ago`
+    : "Live data";
+  const updateLabel = updatedAt
+    ? `Rates: ${new Date(updatedAt).toLocaleString()}`
+    : "Rates updated recently";
+  rateFooter.textContent = `${updateLabel}  ·  ${sourceLabel}  ·  Source: open.er-api.com`;
 
-  function formatNumber(n) {
-    return parseFloat(n).toLocaleString(undefined, { maximumFractionDigits: 4 });
-  }
+  tableSection.style.display = "block";
+}
 
-  // Auto-convert on load
-  doConvert();
+/* ── Init ─────────────────────────────────────────── */
+doConvert();
 </script>
 </body>
 </html>
